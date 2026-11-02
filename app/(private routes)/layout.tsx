@@ -1,4 +1,4 @@
-import { checkSession } from "@/lib/api/serverApi";
+import { checkSession } from "@/lib/api/clientApi";
 import { redirect } from "next/navigation";
 
 export default async function PrivateLayout({

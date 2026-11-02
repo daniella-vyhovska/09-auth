@@ -1,4 +1,4 @@
-import { getMe } from "@/lib/api/serverApi";
+import { getMe } from "@/lib/api/clientApi";
 import css from "./ProfilePage.module.css";
 import type { Metadata } from "next";
 
