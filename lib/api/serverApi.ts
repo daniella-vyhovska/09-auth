@@ -1,48 +1,65 @@
-import { api } from "./api";
 import { cookies } from "next/headers";
+import { api } from "./api";
 
-function withAuth() {
-  const cookieStore = cookies();
-  const allCookies = cookieStore.getAll();
+async function getAuthHeaders() {
+  const cookieStore = await cookies();
 
-  const cookieHeader = allCookies
+  const cookieHeader = cookieStore
+    .getAll()
     .map((cookie) => `${cookie.name}=${cookie.value}`)
     .join("; ");
 
   return {
-    headers: {
-      Cookie: cookieHeader,
-    },
+    Cookie: cookieHeader,
   };
 }
 
-// NOTES
-export async function fetchNotes(page = 1, search = "", tag = "") {
+export async function fetchNotes(
+  page = 1,
+  search = "",
+  tag = ""
+) {
+  const headers = await getAuthHeaders();
+
   const res = await api.get("/notes", {
-    params: { page, search, tag, perPage: 12 },
-    ...withAuth(),
+    params: {
+      page,
+      search,
+      tag,
+      perPage: 12,
+    },
+    headers,
   });
+
   return res.data;
 }
 
 export async function fetchNoteById(id: string) {
+  const headers = await getAuthHeaders();
+
   const res = await api.get(`/notes/${id}`, {
-    ...withAuth(),
+    headers,
   });
+
   return res.data;
 }
 
-// USER
 export async function getMe() {
+  const headers = await getAuthHeaders();
+
   const res = await api.get("/users/me", {
-    ...withAuth(),
+    headers,
   });
+
   return res.data;
 }
 
 export async function checkSession() {
+  const headers = await getAuthHeaders();
+
   const res = await api.get("/auth/session", {
-    ...withAuth(),
+    headers,
   });
+
   return res.data;
 }
