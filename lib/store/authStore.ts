@@ -1,14 +1,11 @@
 import { create } from "zustand";
+import { User } from "@/types/user";
 
 interface AuthStore {
-  user: null | {
-    email: string;
-    username: string;
-    avatar: string;
-  };
+  user: User | null;
   isAuthenticated: boolean;
 
-  setUser: (user: AuthStore["user"]) => void;
+  setUser: (user: User) => void;
   clearIsAuthenticated: () => void;
 }
 

@@ -3,20 +3,29 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
+
 import { fetchNotes } from "@/lib/api/clientApi";
+
 import NoteList from "@/components/NoteList/NoteList";
 import SearchBox from "@/components/SearchBox/SearchBox";
 import Pagination from "@/components/Pagination/Pagination";
+
 import styles from "@/components/NoteList/NoteList.module.css";
 
 interface NotesClientProps {
   tag: string;
 }
 
-export default function NotesClient({ tag }: NotesClientProps) {
-  const [page, setPage] = useState(1);
-  const [search, setSearch] = useState("");
-  const [debouncedSearch, setDebouncedSearch] = useState("");
+export default function NotesClient({
+  tag,
+}: NotesClientProps) {
+  const [page, setPage] = useState<number>(1);
+
+  const [search, setSearch] =
+    useState<string>("");
+
+  const [debouncedSearch, setDebouncedSearch] =
+    useState<string>("");
 
   useEffect(() => {
     const id = setTimeout(() => {
@@ -27,35 +36,69 @@ export default function NotesClient({ tag }: NotesClientProps) {
     return () => clearTimeout(id);
   }, [search]);
 
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["notes", page, tag, debouncedSearch],
-    queryFn: () => fetchNotes(page, debouncedSearch, tag),
+  const {
+    data,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: [
+      "notes",
+      page,
+      tag,
+      debouncedSearch,
+    ],
+
+    queryFn: () =>
+      fetchNotes(
+        page,
+        debouncedSearch,
+        tag
+      ),
   });
 
-  const handleSearchChange = (value: string) => {
+  const handleSearchChange = (
+    value: string
+  ) => {
     setSearch(value);
   };
 
-  const handlePageChange = (nextPage: number) => {
+  const handlePageChange = (
+    nextPage: number
+  ) => {
     setPage(nextPage);
   };
 
   if (isLoading) {
-    return <p className={styles.message}>Loading...</p>;
+    return (
+      <p className={styles.message}>
+        Loading...
+      </p>
+    );
   }
 
   if (isError || !data) {
-    return <p className={styles.message}>Something went wrong.</p>;
+    return (
+      <p className={styles.message}>
+        Something went wrong.
+      </p>
+    );
   }
 
-  const hasNotes = data.notes && data.notes.length > 0;
+  const hasNotes =
+    data.notes.length > 0;
 
   return (
     <div className={styles.wrapper}>
       <div className={styles.topBar}>
-        <SearchBox value={search} onChange={handleSearchChange} />
+        <SearchBox
+          value={search}
+          onChange={handleSearchChange}
+        />
 
-        <Link href="/notes/action/create" className={styles.createButton}>
+        <Link
+          href="/notes/action/create"
+          className={styles.createButton}
+        >
           Create note
         </Link>
       </div>
@@ -71,7 +114,9 @@ export default function NotesClient({ tag }: NotesClientProps) {
           />
         </>
       ) : (
-        <p className={styles.message}>No notes found.</p>
+        <p className={styles.message}>
+          No notes found.
+        </p>
       )}
     </div>
   );

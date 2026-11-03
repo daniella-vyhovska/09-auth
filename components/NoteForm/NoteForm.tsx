@@ -5,6 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createNote } from "@/lib/api/clientApi";
 import { useRouter } from "next/navigation";
 import styles from "./NoteForm.module.css";
+import { Note } from "@/types/note";
 
 export default function NoteForm() {
   const router = useRouter();
@@ -58,7 +59,7 @@ export default function NoteForm() {
           id="tag"
           className={styles.select}
           value={draft.tag}
-          onChange={(e) => setDraft({ tag: e.target.value })}
+          onChange={(e) => setDraft({tag: e.target.value as Note["tag"],})}
         >
           <option value="Todo">Todo</option>
           <option value="Work">Work</option>

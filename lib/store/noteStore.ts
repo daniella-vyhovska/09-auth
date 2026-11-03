@@ -1,17 +1,18 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-
-const initialDraft = {
-  title: "",
-  content: "",
-  tag: "Todo",
-};
+import { Note } from "@/types/note";
 
 interface NoteDraft {
   title: string;
   content: string;
-  tag: string;
+  tag: Note["tag"];
 }
+
+const initialDraft: NoteDraft = {
+  title: "",
+  content: "",
+  tag: "Todo",
+};
 
 interface NoteStore {
   draft: NoteDraft;
