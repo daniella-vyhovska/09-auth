@@ -31,22 +31,27 @@ export async function proxy(req: NextRequest) {
         sessionResponse.headers["set-cookie"];
 
       if (setCookie) {
+        const redirectResponse = NextResponse.redirect(
+          new URL(req.url)
+        );
+        
         const cookieArray = Array.isArray(setCookie)
           ? setCookie
           : [setCookie];
-
+        
         for (const cookieStr of cookieArray) {
-          const parsed =
-            parseSetCookie(cookieStr);
-
+          const parsed = parseSetCookie(cookieStr);
+          
           if (parsed.value) {
-            response.cookies.set(
+            redirectResponse.cookies.set(
               parsed.name,
               parsed.value,
               parsed
             );
           }
         }
+        
+        return redirectResponse;
       }
 
       isAuthenticated = true;
